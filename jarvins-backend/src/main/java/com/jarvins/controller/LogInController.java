@@ -42,10 +42,4 @@ public class LogInController {
         return SuccessResponse.success(logged);
     }
 
-    @GetMapping("/background")
-    public Response background(){
-        String src = loginService.background();
-        return SuccessResponse.success(src);
-    }
-
 }

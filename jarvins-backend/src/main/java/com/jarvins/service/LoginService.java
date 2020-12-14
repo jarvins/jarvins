@@ -6,7 +6,6 @@ import com.jarvins.entity.response.SuccessResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +14,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.jarvins.entity.response.ErrorEnum.*;
 
@@ -40,13 +37,6 @@ public class LoginService {
     private static final String BLACK_IP_PREFIX = "black_ip_";
     //黑名单缓存时效
     private static final int FAIL_CACHE_TIME = 60 * 10;
-
-    //必应请求地址
-    private static final String BIYING_REQUEST_URL = "https://cn.bing.com/HPImageArchive.aspx?idx=0&n=1";
-    //必应url
-    private static final String BIYING_URL = "https://cn.bing.com/";
-    //必应正则
-    private static final Pattern BIYING_PATTERN = Pattern.compile("(?<=<url>).*(?=</url>)");
 
     public LoginService(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -114,17 +104,5 @@ public class LoginService {
             return match.filter(cookie -> redisTemplate.opsForValue().get(cookie.getValue()) != null).isPresent();
         }
         return false;
-    }
-
-    public String background() {
-        RestTemplate template = new RestTemplate();
-        String body = template.getForObject(BIYING_REQUEST_URL, String.class);
-        assert body != null;
-        Matcher matcher = BIYING_PATTERN.matcher(body);
-        if (matcher.find()) {
-            String suffix = matcher.group();
-            return BIYING_URL + suffix;
-        }
-        return null;
     }
 }
