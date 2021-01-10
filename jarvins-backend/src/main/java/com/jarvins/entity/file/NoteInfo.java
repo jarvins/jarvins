@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,6 +18,8 @@ public class NoteInfo implements Serializable {
     boolean folder;
 
     String path;
+
+    BigDecimal size;
 
     String parentPath;
 
