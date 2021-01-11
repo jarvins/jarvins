@@ -14,8 +14,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,7 @@ public class FileService {
 
     private static final String FILE_ROOT_PATH = "/jarvins/static/";
     private static final String STATIC_RESOURCE_PREFIX = "https://jarvins.com/icloud/";
+    private static final BigDecimal _M_ = BigDecimal.valueOf(1024 * 1024);
 
     FileMapper fileMapper;
 
@@ -50,7 +53,7 @@ public class FileService {
         boolean rootFolder = prefix.equals("/");
         String path = rootFolder ? '/' + name : prefix + '/' + name;
         String parentPath = rootFolder ? "/" : prefix;
-        FileInfo fileInfo = new FileInfo(name, uuid, "folder", true, 0, path, path, parentPath);
+        FileInfo fileInfo = new FileInfo(name, uuid, "folder", true, BigDecimal.ZERO, path, path, parentPath);
         try {
             return fileMapper.insertFileInfo(fileInfo) == 1;
         } catch (DataIntegrityViolationException e) {
@@ -98,9 +101,11 @@ public class FileService {
         List<FileInfo> childFile = fileMapper.selectChildFile(path);
         List<FileSys> child = childFile.stream()
                 .map(e -> FileSys.builder()
-                        .name(e.isFolder() ? e.getName() : e.getName().substring(0, e.getName().indexOf(e.getType()) - 1))
+                        .name(e.getName())
                         .type(e.getType())
                         .folder(e.isFolder())
+                        .size(e.getSize())
+                        .create(e.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                         .build())
                 .sorted((f1, f2) -> {
                     if (f1.isFolder() ^ f2.isFolder()) {
@@ -127,7 +132,7 @@ public class FileService {
                 String parentPath = entry.getKey();
                 String path = parentPath.equals("/") ? parentPath + name : parentPath + '/' + name;
                 String filePath = FILE_ROOT_PATH + fileName;
-                float size = ((float) multipartFile.getSize()) / (1024 * 1024);
+                BigDecimal size = new BigDecimal(multipartFile.getSize()).divide(_M_, 2, RoundingMode.HALF_UP);
                 FileInfo file = new FileInfo(name, fileName, type, false, size, path, filePath, parentPath);
                 //上传文件
                 File _file = new File(filePath);
