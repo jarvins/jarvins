@@ -1,16 +1,18 @@
 package com.jarvins.controller;
 
-import com.jarvins.entity.response.ErrorResponse;
 import com.jarvins.entity.Response;
+import com.jarvins.entity.response.ErrorResponse;
 import com.jarvins.entity.response.SuccessResponse;
 import com.jarvins.entity.dto.*;
+import com.jarvins.entity.vo.LinksVo;
 import com.jarvins.service.HomepageService;
-import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.jarvins.entity.response.ErrorEnum.*;
+import static com.jarvins.entity.response.ErrorEnum.ADD_ERROR;
+
 
 @RestController
 @RequestMapping("/homepage")
@@ -34,46 +36,6 @@ public class HomePageController {
         return SuccessResponse.success(zhihuDTOS);
     }
 
-//    @GetMapping("/getMemorandum")
-//    public Response getMemorandum() {
-//        List<Memorandum> memorandum = homepageService.getMemorandum();
-//        return SuccessResponse.success(memorandum);
-//    }
-//
-//    @PostMapping("/addMemorandum")
-//    public Response addMemorandum(@RequestBody Memorandum memorandum) {
-//        if (homepageService.addMemorandum(memorandum)) {
-//            return SuccessResponse.success(true);
-//        }
-//        return ErrorResponse.error(ADD_ERROR);
-//    }
-//
-//    @GetMapping("/completeMemorandum")
-//    public Response completeMemorandum(@RequestParam int id) {
-//        if (homepageService.completeMemorandum(id)) {
-//            return SuccessResponse.success(true);
-//        }
-//        return ErrorResponse.error(DElETE_ERROR);
-//    }
-//
-//    @GetMapping("/getMonthlyBillStatistics")
-//    public Response getMonthlyBillStatistics(@RequestParam String month) {
-//        return SuccessResponse.success(homepageService.getBillMonthlyStatistics(month));
-//    }
-//
-//    @GetMapping("/getDailyBillRecord")
-//    public Response getBillDailyStatistics(@RequestParam String day) {
-//        return SuccessResponse.success(homepageService.getDailyBillRecord(day));
-//    }
-//
-//    @PostMapping("/addBillRecord")
-//    public Response addBillRecord(@RequestBody BillRecord billRecord) {
-//        if (homepageService.addDailyBill(billRecord)) {
-//            return SuccessResponse.success(true);
-//        }
-//        return ErrorResponse.error(ADD_ERROR);
-//    }
-
     @GetMapping("/timeLine")
     public Response getTimeLine() {
         List<TimeLine> timeLine = homepageService.getTimeLine();
@@ -84,5 +46,19 @@ public class HomePageController {
     public Response getJuejun(@RequestParam String category, @RequestParam String order){
         List<JuejinItem> juejin = homepageService.getJuejin(category, order);
         return SuccessResponse.success(juejin);
+    }
+
+    @GetMapping("/links")
+    public Response getLinks(){
+        LinksVo links = homepageService.getLinks();
+        return SuccessResponse.success(links);
+    }
+
+    @GetMapping("/addLinks")
+    public Response addLinks(@RequestParam @Nullable String folderName,@RequestParam @Nullable String name, @RequestParam @Nullable String link){
+        if(homepageService.addLinks(folderName,name,link)){
+            return SuccessResponse.success(null);
+        }
+        return ErrorResponse.error(ADD_ERROR);
     }
 }

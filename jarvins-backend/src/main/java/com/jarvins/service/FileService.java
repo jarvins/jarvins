@@ -27,6 +27,10 @@ public class FileService {
 
     private static final String FILE_ROOT_PATH = "/jarvins/static/";
     private static final String STATIC_RESOURCE_PREFIX = "https://jarvins.com/icloud/";
+
+//    private static final String FILE_ROOT_PATH = "C:\\Download\\";
+//    private static final String STATIC_RESOURCE_PREFIX = "C:\\Download\\";
+
     private static final BigDecimal _M_ = BigDecimal.valueOf(1024 * 1024);
 
     FileMapper fileMapper;

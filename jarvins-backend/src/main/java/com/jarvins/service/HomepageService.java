@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jarvins.entity.dto.*;
-import com.jarvins.mapper.BillMapper;
-import com.jarvins.mapper.MemorandumMapper;
+import com.jarvins.entity.vo.LinksVo;
+import com.jarvins.mapper.LinksMapper;
 import com.jarvins.mapper.TimeLimeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -13,34 +13,28 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import static com.jarvins.entity.Constant.TYPE;
 
 @Slf4j
 @Service
 public class HomepageService {
 
     @Resource
-    MemorandumMapper memorandumMapper;
-
-    @Resource
-    BillMapper billMapper;
-
-    @Resource
     TimeLimeMapper timeLimeMapper;
+
+    @Resource
+    LinksMapper linksMapper;
 
     //微博爬虫地址
     private static final String WEIBO_URL = "https://s.weibo.com/top/summary?cate=realtimehot";
@@ -117,68 +111,6 @@ public class HomepageService {
         return res;
     }
 
-    public List<Memorandum> getMemorandum() {
-        return memorandumMapper.selectMemorandum();
-    }
-
-    public boolean addMemorandum(Memorandum memorandum) {
-        try {
-            return memorandumMapper.insertMemorandum(memorandum) == 1;
-        } catch (DataIntegrityViolationException e) {
-            log.warn("HomepageService.addMemorandum,[{}]", e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean completeMemorandum(int id) {
-        try {
-            return memorandumMapper.completeMemorandum(id) == 1;
-        } catch (DataIntegrityViolationException e) {
-            log.warn("HomepageService.completeMemorandum,[{}]", e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean addDailyBill(BillRecord bill) {
-        try {
-            //添加记录日期
-            bill.setRecordDate(LocalDate.now());
-            return billMapper.insertBillRecord(bill) == 1;
-        } catch (DataIntegrityViolationException e) {
-            log.warn("HomepageService.addDailyBill,[{}]", e.getMessage());
-            return false;
-        }
-
-    }
-
-    public List<List<String>> getBillMonthlyStatistics(String month) {
-        LocalDate start = LocalDate.parse(month + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        List<BillStatistics> billStatistics;
-        if (!start.plusMonths(1).isAfter(LocalDate.now())) {
-            billStatistics = billMapper.selectBillStatisticsMonthly(start.toString(), start.plusMonths(1).plusDays(-1).toString());
-        } else {
-            billStatistics = billMapper.selectBillStatisticsMonthly(start.toString(), LocalDate.now().plusDays(-1).toString());
-        }
-        //数据处理下,方便前端使用
-        List<List<String>> res = new ArrayList<>();
-        billStatistics.sort(Comparator.comparing(BillStatistics::getStatisticsDate));
-        List<String> date = new ArrayList<>(billStatistics.stream().map(e -> e.getStatisticsDate().toString()).collect(Collectors.toSet()));
-        date.add(0, "StatisticsDate");
-        res.add(date);
-
-        for (String type : TYPE) {
-            List<String> list = billStatistics.stream().filter(e -> e.getType().equals(type)).map(e -> e.getAmount().toString()).collect(Collectors.toList());
-            list.add(0, type);
-            res.add(list);
-        }
-        log.info("HomepageService.getBillMonthlyStatistics, get statistics success,month:[{}]", month);
-        return res;
-    }
-
-    public List<BillRecord> getDailyBillRecord(String day) {
-        return billMapper.selectBillRecord(day);
-    }
-
     public List<TimeLine> getTimeLine() {
         List<Map<String, String>> list = timeLimeMapper.timeLine();
         Map<String, TimeLine> res = new HashMap<>();
@@ -211,11 +143,27 @@ public class HomepageService {
                         .user(e.getJSONObject("user").getString("username"))
                         .time(calTime(e.getJSONObject("date").getString("iso")))
                         .build()).collect(Collectors.toList());
-        log.info("HomepageService.getJuejin: crawl juejin artical success.");
+        log.info("HomepageService.getJuejin: crawl Juejin article success.");
         return collect;
     }
 
-    private String calTime(String time) {
+    public LinksVo getLinks() {
+        List<Links> links = linksMapper.links();
+        Map<String, List<Links>> folders = links.stream()
+                .filter(e -> e.getParent() != null)
+                .collect(Collectors.groupingBy(Links::getParent));
+        List<LinksVo.Link> linkList = links.stream().filter(e -> e.getParent() == null).map(e -> new LinksVo.Link(e.getName(), e.getLinks())).collect(Collectors.toList());
+        List<LinksVo.Folder> folderList = new ArrayList<>();
+        folders.forEach((k,v) ->
+                folderList.add(LinksVo.Folder.builder().folderName(k).links(v.stream().filter(e -> e.getName() != null).map(e -> new LinksVo.Link(e.getName(), e.getLinks())).collect(Collectors.toList())).build()));
+        return new LinksVo(linkList,folderList);
+    }
+
+    public boolean addLinks(String folderName, String name, String link){
+        return linksMapper.addLinks( name, link,folderName) == 1;
+    }
+
+        private String calTime(String time) {
         LocalDateTime createTime = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME);
         long secondBetween = Duration.between(createTime, LocalDateTime.now()).getSeconds();
         //一分钟以内
