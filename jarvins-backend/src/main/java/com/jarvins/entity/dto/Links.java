@@ -13,6 +13,8 @@ public class Links {
 
     private String links;
 
+    private String iconLink;
+
     private String parent;
 
     private LocalDateTime createTime;

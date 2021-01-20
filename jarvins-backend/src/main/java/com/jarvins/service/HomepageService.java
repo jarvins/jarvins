@@ -152,10 +152,10 @@ public class HomepageService {
         Map<String, List<Links>> folders = links.stream()
                 .filter(e -> e.getParent() != null)
                 .collect(Collectors.groupingBy(Links::getParent));
-        List<LinksVo.Link> linkList = links.stream().filter(e -> e.getParent() == null).map(e -> new LinksVo.Link(e.getName(), e.getLinks())).collect(Collectors.toList());
+        List<LinksVo.Link> linkList = links.stream().filter(e -> e.getParent() == null).map(e -> new LinksVo.Link(e.getName(), e.getLinks(),e.getIconLink())).collect(Collectors.toList());
         List<LinksVo.Folder> folderList = new ArrayList<>();
         folders.forEach((k,v) ->
-                folderList.add(LinksVo.Folder.builder().folderName(k).links(v.stream().filter(e -> e.getName() != null).map(e -> new LinksVo.Link(e.getName(), e.getLinks())).collect(Collectors.toList())).build()));
+                folderList.add(LinksVo.Folder.builder().folderName(k).links(v.stream().filter(e -> e.getName() != null).map(e -> new LinksVo.Link(e.getName(), e.getLinks(),e.getIconLink())).collect(Collectors.toList())).build()));
         return new LinksVo(linkList,folderList);
     }
 

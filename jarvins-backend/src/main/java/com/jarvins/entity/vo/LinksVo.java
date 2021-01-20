@@ -22,6 +22,7 @@ public class LinksVo implements Serializable {
     public static class Link implements Serializable{
         private String name;
         private String link;
+        private String iconLink;
     }
 
     @Data
