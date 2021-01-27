@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ErrorEnum {
     //登录异常
     AUTH_FAIL_ERROR(310, "认证失败"),
-    MAX_AUTH_ERROR(311, "登录失败超过5次,请10分钟之后尝试登陆"),
+    MAX_AUTH_ERROR(311, "登录失败超过5次,请1小时之后尝试登陆"),
     COOKIE_FAIL_ERROR(312, "cookie失效"),
 
     //请求异常

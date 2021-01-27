@@ -28,15 +28,15 @@ public class LoginService {
     //cookie domain
     private static final String DOMAIN = "jarvins.com";
     //cookie maxAge
-    private static final int COOKIE_MAX_AGE = 60 * 60 * 2;
+    private static final int COOKIE_MAX_AGE = 60 * 60 * 24;
     //cookie记录
     private static final String COOKIE_NAME = "_UID";
     //redis登录信息缓存时间
-    private static final int SUCCESS_CACHE_TIME = 60 * 60;
+    private static final int SUCCESS_CACHE_TIME = 60 * 60 * 24;
     //ip黑名单
     private static final String BLACK_IP_PREFIX = "black_ip_";
     //黑名单缓存时效
-    private static final int FAIL_CACHE_TIME = 60 * 10;
+    private static final int FAIL_CACHE_TIME = 60 * 60;
 
     public LoginService(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
