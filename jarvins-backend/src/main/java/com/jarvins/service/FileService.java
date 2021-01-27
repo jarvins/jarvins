@@ -3,6 +3,7 @@ package com.jarvins.service;
 import com.jarvins.entity.dto.FileSys;
 import com.jarvins.entity.file.FileInfo;
 import com.jarvins.entity.file.FileType;
+import com.jarvins.entity.vo.LoadPicsVo;
 import com.jarvins.mapper.FileMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -163,13 +164,17 @@ public class FileService {
         return STATIC_RESOURCE_PREFIX + fileInfo.getFileName();
     }
 
-    public List<String> loadAllPic(String prefix, String name) {
+    public LoadPicsVo loadAllPic(String prefix, String name) {
         String path = prefix.equals("/") ? '/' + name : prefix + '/' + name;
         FileInfo fileInfo = fileMapper.selectFile(path);
         String parentPath = fileInfo.getParentPath();
         List<FileInfo> childFile = fileMapper.selectChildFile(parentPath);
         List<String> pic = Arrays.asList("png", "jpg", "jpeg", "gif");
-        return childFile.stream().filter(e -> pic.contains(e.getType())).map(e -> STATIC_RESOURCE_PREFIX + e.getFileName()).collect(Collectors.toList());
+        List<String> pics = childFile.stream().filter(e -> pic.contains(e.getType())).map(e -> STATIC_RESOURCE_PREFIX + e.getFileName()).collect(Collectors.toList());
+        Optional<FileInfo> selected = childFile.stream().filter(e -> e.getName().equals(name)).findFirst();
+        assert selected.isPresent();
+        String selectedPic = STATIC_RESOURCE_PREFIX + selected.get().getFileName();
+        return new LoadPicsVo(selectedPic,pics);
     }
 
     private void delete(String path) {
