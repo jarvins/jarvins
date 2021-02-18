@@ -3,6 +3,7 @@ package com.jarvins.service;
 import com.jarvins.entity.dto.FileSys;
 import com.jarvins.entity.file.FileInfo;
 import com.jarvins.entity.file.FileType;
+import com.jarvins.entity.file.NoteInfo;
 import com.jarvins.entity.vo.LoadPicsVo;
 import com.jarvins.mapper.FileMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -87,8 +88,13 @@ public class FileService {
             deletePathList.add(file.getPath());
         }
 
+        //向上修改文件大小
+        FileInfo file = fileMapper.selectFile(path);
+        BigDecimal size = file.getSize();
+        reCalFolderSize(file.getParentPath(),size.negate());
+
         //真实删除
-        delete(fileMapper.selectFile(path).getFilePath());
+        delete(file.getFilePath());
 
         //数据库删除
         int deletedSize = fileMapper.batchDeleteFile(deletePathList);
@@ -139,6 +145,10 @@ public class FileService {
                 String filePath = FILE_ROOT_PATH + fileName;
                 BigDecimal size = new BigDecimal(multipartFile.getSize()).divide(_M_, 2, RoundingMode.HALF_UP);
                 FileInfo file = new FileInfo(name, fileName, type, false, size, path, filePath, parentPath);
+
+                //向上更新文件大小
+                reCalFolderSize(parentPath,size);
+
                 //上传文件
                 File _file = new File(filePath);
                 if (!_file.exists()) {
@@ -192,6 +202,14 @@ public class FileService {
             } else {
                 file.delete();
             }
+        }
+    }
+
+    private void reCalFolderSize(String path, BigDecimal changeSize){
+        while(!path.equals("/")){
+            FileInfo node = fileMapper.selectFile(path);
+            fileMapper.updateFolderSize(node.getSize().add(changeSize),path);
+            path = node.getParentPath();
         }
     }
 }
