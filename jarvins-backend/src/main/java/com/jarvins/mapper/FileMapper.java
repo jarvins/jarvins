@@ -30,7 +30,7 @@ public interface FileMapper {
             "</script>")
     int batchDeleteFile(@Param("list") List<String> list);
 
-    @Update("update file set size = #{size}, update_time = CURRENT_TIMESTAMP where path = #{path}")
+    @Update("update file set size = #{size} where path = #{path}")
     int updateFolderSize(@Param("size") BigDecimal size,
                          @Param("path") String path);
 }
