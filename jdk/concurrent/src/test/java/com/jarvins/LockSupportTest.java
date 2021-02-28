@@ -99,6 +99,10 @@ public class LockSupportTest {
          * 多次unpark()也只会响应一次park()
          * unpark()即使发生在park()之前，也会生效(导致下一次park()不会WAITING)
          */
+
+        LockSupport.unpark( Thread.currentThread());
+        LockSupport.park();
+        System.out.println("ok");
     }
 
     @Test
