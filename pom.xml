@@ -13,10 +13,11 @@
         <module>data-creator</module>
         <module>jdk</module>
         <module>jarvins-backend</module>
+        <module>spring-cloud</module>
     </modules>
 
     <properties>
-        <spring-dependencies.version>2.3.3.RELEASE</spring-dependencies.version>
+        <spring-dependencies.version>2.1.1.RELEASE</spring-dependencies.version>
         <jdk.version>1.8</jdk.version>
         <junit.version>5.4</junit.version>
         <lombok.version>1.18.10</lombok.version>
@@ -44,6 +45,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <version>5.6.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -59,7 +61,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
