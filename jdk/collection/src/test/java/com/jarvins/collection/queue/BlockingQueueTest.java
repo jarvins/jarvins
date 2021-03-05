@@ -55,7 +55,7 @@ public class BlockingQueueTest {
          *
          */
 
-         BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(10);
+        BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(10);
         ExecutorService service = Executors.newFixedThreadPool(4);
         Runnable consumer = () -> {
             while (true) {

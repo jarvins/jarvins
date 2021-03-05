@@ -12,7 +12,6 @@
         <module>algorithm</module>
         <module>data-creator</module>
         <module>jdk</module>
-        <module>schedule-task</module>
         <module>jarvins-backend</module>
     </modules>
 
@@ -39,8 +38,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
 
+    <dependencies>
         <!-- test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
