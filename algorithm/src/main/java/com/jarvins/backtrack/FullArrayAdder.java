@@ -33,7 +33,7 @@ public class FullArrayAdder {
         FullArrayAdder arrayAdder = new FullArrayAdder();
         int[] arr = {1,1,2};
         List<List<Integer>> lists = arrayAdder.permuteUnique(arr);
-        System.out.println();
+        System.out.println(lists);
     }
 
     public List<List<Integer>> permuteUnique(int[] nums) {

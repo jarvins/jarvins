@@ -13,6 +13,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-eureka</module>
+        <module>spring-eureka/eureka-client-alpha</module>
+        <module>spring-eureka/eureka-client-beta</module>
+        <module>spring-eureka/eureka-client-gamma</module>
+        <module>spring-ribbon</module>
+        <module>spring-gateway</module>
     </modules>
 
     <dependencyManagement>

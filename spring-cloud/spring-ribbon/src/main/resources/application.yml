@@ -1,0 +1,12 @@
+server:
+  port: 12001
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:10000/eureka/
+spring:
+  application:
+    name: RIBBON-CLIENT
