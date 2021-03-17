@@ -1,5 +1,5 @@
 ### 数据随机生成器
-
+swagger地址: http://localhost:9000/data-creator/swagger-ui/index.html#/
 #### 目的
 生成百万级数据用于学习测试
 

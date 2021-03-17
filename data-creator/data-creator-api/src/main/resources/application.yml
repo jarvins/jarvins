@@ -8,7 +8,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://ineffable.ink:33060/core?characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://jarvins.com:33060/jarvins?characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
     hikari:
       username: P1cGFkH2YE
       password: r85yQGiz6i

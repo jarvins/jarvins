@@ -34,6 +34,7 @@ public class Matryoshka {
             if (e1[0] != e2[0]) {
                 return e1[0] - e2[0];
             } else {
+                //重点在于宽度正序则高度倒序排列
                 return e2[1] - e1[1];
             }
         });
