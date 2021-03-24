@@ -1,6 +1,6 @@
 package com.jarvins.tree;
 
-import com.jarvins.TreeNode;
+import com.jarvins.util.TreeNode;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

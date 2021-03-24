@@ -1,6 +1,6 @@
 package com.jarvins.tree;
 
-import com.jarvins.TreeNode;
+import com.jarvins.util.TreeNode;
 
 /**
  * 给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，

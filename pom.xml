@@ -14,10 +14,11 @@
         <module>jdk</module>
         <module>jarvins-backend</module>
         <module>spring-cloud</module>
+        <module>spring-boot</module>
     </modules>
 
     <properties>
-        <spring-dependencies.version>2.1.1.RELEASE</spring-dependencies.version>
+        <spring-dependencies.version>2.3.3.RELEASE</spring-dependencies.version>
         <jdk.version>1.8</jdk.version>
         <junit.version>5.4</junit.version>
         <lombok.version>1.18.10</lombok.version>

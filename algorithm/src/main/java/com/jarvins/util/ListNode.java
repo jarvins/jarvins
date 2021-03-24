@@ -1,4 +1,4 @@
-package com.jarvins;
+package com.jarvins.util;
 
 
 public class ListNode {

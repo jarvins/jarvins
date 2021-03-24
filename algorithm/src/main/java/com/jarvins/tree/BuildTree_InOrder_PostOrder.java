@@ -1,6 +1,6 @@
 package com.jarvins.tree;
 
-import com.jarvins.TreeNode;
+import com.jarvins.util.TreeNode;
 
 /**
  * 根据一棵树的中序遍历与后序遍历构造二叉树。

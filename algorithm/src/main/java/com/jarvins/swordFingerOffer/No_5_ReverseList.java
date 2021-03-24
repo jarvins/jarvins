@@ -1,6 +1,6 @@
 package com.jarvins.swordFingerOffer;
 
-import com.jarvins.ListNode;
+import com.jarvins.util.ListNode;
 
 import java.util.*;
 

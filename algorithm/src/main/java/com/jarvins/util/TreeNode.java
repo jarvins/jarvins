@@ -1,4 +1,4 @@
-package com.jarvins;
+package com.jarvins.util;
 
 import java.util.LinkedList;
 import java.util.Queue;
